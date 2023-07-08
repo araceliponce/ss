@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SS</title>
+</head>
+
+<body>
+
+
+  <canvas id="canvas"></canvas>
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Define the colors */
+    .pink {
+      background-color: pink;
+    }
+
+    .lightgreen {
+      background-color: lightgreen;
+    }
+
+    .coral {
+      background-color: coral;
+    }
+  </style>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    let time = 0;
+
+    const color = function (x, y, r, g, b) {
+      context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+      context.fillRect(x, y, 20, 20); // Increase the size of the rectangles
+    };
+
+    const R = function (x, y, time) {
+      return Math.floor(192 + 64 * Math.cos((x * x - y * y) / 300 + time));
+    };
+
+    const G = function (x, y, time) {
+      return Math.floor(192 + 64 * Math.sin((x * x * Math.cos(time / 4) + y * y * Math.sin(time / 3)) / 300));
+    };
+
+    const B = function (x, y, time) {
+      return Math.floor(192 + 64 * Math.sin(5 * Math.sin(time / 9) + ((x - 100) * (x - 100) + (y - 100) * (y - 100)) / 1100));
+    };
+
+    const startAnimation = function () {
+      const width = canvas.width = window.innerWidth;
+      const height = canvas.height = window.innerHeight;
+
+      const colors = ['pink', 'lightgreen', 'coral'];
+      let colorIndex = 0;
+
+      for (x = 0; x <= width / 20; x++) { // Adjust the division factor for the desired size
+        for (y = 0; y <= height / 20; y++) { // Adjust the division factor for the desired size
+          color(x * 20, y * 20, R(x, y, time), G(x, y, time), B(x, y, time)); // Multiply x and y by 20 to account for the increased rectangle size
+        }
+      }
+
+      time += 0.03;
+      colorIndex = (colorIndex + 1) % colors.length;
+      canvas.classList.add(colors[colorIndex]);
+
+      window.requestAnimationFrame(startAnimation);
+    };
+
+    startAnimation();
+
+    window.addEventListener('resize', () => {
+      startAnimation();
+    });
+
+  </script>
+</body>
+
+</html>
